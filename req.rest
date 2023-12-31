@@ -2,6 +2,10 @@
 GET http://localhost:8080/api/tasks
 Accept: application/json
 
+### GET TASKS BY ID
+GET http://localhost:8080/api/tasks/1
+Accept: application/json
+
 ### NEW TASKS
 POST http://localhost:8080/api/tasks
 Accept: application/json

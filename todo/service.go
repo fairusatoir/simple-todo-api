@@ -17,6 +17,20 @@ func ListAll(ctx context.Context) []domain.Task {
 	return All(ctx, *tx)
 }
 
+func GetItemById(ctx context.Context, id int) domain.Task {
+
+	tx, err := SetPool().Begin()
+	PanicIfError(err)
+	defer CommitOrRollback(tx)
+
+	item, err := Find(ctx, *tx, id)
+	if err != nil {
+		panic(NewNotFoundError(id))
+	}
+
+	return item
+}
+
 func SaveItem(ctx context.Context, item domain.Task) domain.Task {
 	err := validator.New().Struct(item)
 	PanicIfError(err)
