@@ -8,8 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var validate *validator.Validate
-
 func ListAll(ctx context.Context) []domain.Task {
 
 	tx, err := SetPool().Begin()
@@ -20,8 +18,7 @@ func ListAll(ctx context.Context) []domain.Task {
 }
 
 func SaveItem(ctx context.Context, item domain.Task) domain.Task {
-
-	err := validate.Struct(item)
+	err := validator.New().Struct(item)
 	PanicIfError(err)
 
 	tx, err := SetPool().Begin()
