@@ -15,7 +15,7 @@ func PanicOnError(err error) {
 }
 
 func ErrorHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
-	fmt.Printf("[%s][%s]\n", "ERROR", err)
+	// fmt.Printf("[%s][%s]\n", "ERROR", err)
 
 	if ex, ok := err.(validator.ValidationErrors); ok {
 		badRequestError(w, r, ex.Error())

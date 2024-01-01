@@ -17,4 +17,5 @@ type Repositories interface {
 	All(c context.Context, tx *sql.Tx) ([]domains.Task, error)
 	Find(c context.Context, tx *sql.Tx, id int) (domains.Task, error)
 	Save(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error)
+	Update(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error)
 }

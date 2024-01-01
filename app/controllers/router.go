@@ -36,6 +36,7 @@ func Handler() *httprouter.Router {
 	r.GET("/api/tasks", handler.FindAllItems)
 	r.GET("/api/tasks/:id", handler.FindItem)
 	r.POST("/api/tasks", handler.CreateItem)
+	r.PUT("/api/tasks/:id", handler.UpdateItem)
 
 	r.PanicHandler = utilities.ErrorHandler
 	return r
@@ -64,8 +65,22 @@ func (r *router) CreateItem(w http.ResponseWriter, re *http.Request, p httproute
 	utilities.ReadRequest(re, &reqItem)
 
 	item, err := r.Usecase.InsertItem(re.Context(), reqItem)
-	if err != nil {
-		panic(err)
-	}
+	utilities.PanicOnError(err)
+
 	utilities.GenerateResponse(w, http.StatusCreated, item, nil)
+}
+
+func (r *router) UpdateItem(w http.ResponseWriter, re *http.Request, p httprouter.Params) {
+	id, err := strconv.Atoi(p.ByName("id"))
+	utilities.PanicOnError(err)
+
+	reqItem := domains.Task{}
+	utilities.ReadRequest(re, &reqItem)
+
+	reqItem.Id = id
+
+	item, err := r.Usecase.UpdateItem(re.Context(), reqItem)
+	utilities.PanicOnError(err)
+
+	utilities.GenerateResponse(w, http.StatusAccepted, item, nil)
 }

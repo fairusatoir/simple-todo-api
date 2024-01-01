@@ -60,3 +60,32 @@ func (u *usecase) InsertItem(c context.Context, item domains.Task) (domains.Task
 
 	return NewItem, nil
 }
+
+func (u *usecase) UpdateItem(c context.Context, item domains.Task) (domains.Task, error) {
+	err := u.Validate.Struct(item)
+	if err != nil {
+		return domains.Task{}, err
+	}
+
+	tx, err := u.MasterdataClient.Begin()
+	if err != nil {
+		return domains.Task{}, err
+	}
+	defer utilities.CommitOrRollback(tx)
+
+	task, err := u.Repo.Find(c, tx, item.Id)
+	if err != nil {
+		return domains.Task{}, err
+	}
+
+	if task.Id == 0 {
+		panic(utilities.NewNotFoundError(item.Id))
+	}
+
+	NewItem, err := u.Repo.Update(c, tx, item)
+	if err != nil {
+		return domains.Task{}, err
+	}
+
+	return NewItem, nil
+}
