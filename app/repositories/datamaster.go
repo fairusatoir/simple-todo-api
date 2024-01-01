@@ -1,0 +1,67 @@
+package repositories
+
+import (
+	"context"
+	"database/sql"
+	"simple-to-do/app/domains"
+	"simple-to-do/utilities"
+)
+
+func (r *repositories) All(c context.Context, tx *sql.Tx) ([]domains.Task, error) {
+	q := "SELECT id, title, description, due_date, is_completed FROM task"
+	rows, err := tx.QueryContext(c, q)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var items []domains.Task
+	for rows.Next() {
+		var item domains.Task
+		err := rows.Scan(&item.Id, &item.Title, &item.Description, &item.DueDate, &item.IsCompleted)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, item)
+	}
+
+	err = rows.Err() // Periksa error setelah loop selesai
+	if err != nil {
+		return nil, err
+	}
+
+	return items, nil
+}
+
+func (r *repositories) Find(c context.Context, tx *sql.Tx, id int) (domains.Task, error) {
+	q := "SELECT id, title, description, due_date, is_completed FROM task WHERE id = ?"
+	row := tx.QueryRowContext(c, q, id)
+
+	var task domains.Task
+	err := row.Scan(&task.Id, &task.Title, &task.Description, &task.DueDate, &task.IsCompleted)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			panic(utilities.NewNotFoundError(id))
+		}
+		return domains.Task{}, err
+	}
+
+	return task, nil
+}
+
+func (r *repositories) Save(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error) {
+	q := "INSERT INTO task(title, description, due_date) VALUES (?,?,?)"
+	result, e := tx.ExecContext(c, q, item.Title, item.Description, item.DueDate)
+	if e != nil {
+		return domains.Task{}, e
+	}
+
+	id, e := result.LastInsertId()
+	if e != nil {
+		return domains.Task{}, e
+	}
+
+	item.Id = int(id)
+
+	return item, nil
+}
