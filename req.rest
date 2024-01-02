@@ -59,3 +59,11 @@ Accept: application/json
 ### DELETE TASKS BY ID NOT FOUND
 DELETE http://localhost:8080/api/tasks/99999
 Accept: application/json
+
+### COMPLATED TASKS BY ID
+GET http://localhost:8080/api/tasks/2/complated
+Accept: application/json
+
+### COMPLATED TASKS BY ID NOT FOUND
+GET http://localhost:8080/api/tasks/99999/complated
+Accept: application/json

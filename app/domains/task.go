@@ -9,3 +9,9 @@ type Task struct {
 	DueDate     time.Time `json:"due_date"`
 	IsCompleted bool      `json:"is_completed"`
 }
+
+func (t *Task) Done() {
+	if !t.IsCompleted {
+		t.IsCompleted = true
+	}
+}

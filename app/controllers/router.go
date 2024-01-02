@@ -38,6 +38,7 @@ func Handler() *httprouter.Router {
 	r.POST("/api/tasks", handler.CreateItem)
 	r.PUT("/api/tasks/:id", handler.UpdateItem)
 	r.DELETE("/api/tasks/:id", handler.DeleteItem)
+	r.GET("/api/tasks/:id/complated", handler.ComplatedItem)
 
 	r.PanicHandler = utilities.ErrorHandler
 	return r
@@ -94,4 +95,14 @@ func (r *router) DeleteItem(w http.ResponseWriter, re *http.Request, p httproute
 	utilities.PanicOnError(err)
 
 	utilities.GenerateResponse(w, http.StatusOK, nil, nil)
+}
+
+func (r *router) ComplatedItem(w http.ResponseWriter, re *http.Request, p httprouter.Params) {
+	id, err := strconv.Atoi(p.ByName("id"))
+	utilities.PanicOnError(err)
+
+	item, err := r.Usecase.UpdateCompletedItem(re.Context(), id)
+	utilities.PanicOnError(err)
+
+	utilities.GenerateResponse(w, http.StatusOK, item, nil)
 }

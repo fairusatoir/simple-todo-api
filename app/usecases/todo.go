@@ -104,3 +104,30 @@ func (u *usecase) DeleteItem(c context.Context, id int) error {
 
 	return nil
 }
+
+func (u *usecase) UpdateCompletedItem(c context.Context, id int) (domains.Task, error) {
+	tx, err := u.MasterdataClient.Begin()
+	if err != nil {
+		return domains.Task{}, err
+	}
+	defer utilities.CommitOrRollback(tx)
+
+	task, err := u.Repo.Find(c, tx, id)
+	if err != nil {
+		return domains.Task{}, err
+	}
+
+	if task.Id == 0 {
+		panic(utilities.NewNotFoundError(id))
+	}
+
+	if !task.IsCompleted {
+		task.Done()
+		task, err = u.Repo.Update(c, tx, task)
+		if err != nil {
+			return domains.Task{}, err
+		}
+	}
+
+	return task, nil
+}

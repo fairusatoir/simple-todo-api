@@ -67,8 +67,8 @@ func (r *repositories) Save(c context.Context, tx *sql.Tx, item domains.Task) (d
 }
 
 func (r *repositories) Update(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error) {
-	q := "UPDATE task SET title = ?, description = ?, due_date = ? WHERE id = ?"
-	result, err := tx.ExecContext(c, q, item.Title, item.Description, item.DueDate, item.Id)
+	q := "UPDATE task SET title = ?, description = ?, due_date = ?, is_completed = ? WHERE id = ?"
+	result, err := tx.ExecContext(c, q, item.Title, item.Description, item.DueDate, item.IsCompleted, item.Id)
 	if err != nil {
 		return domains.Task{}, err
 	}
