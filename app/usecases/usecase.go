@@ -28,4 +28,5 @@ type Usecase interface {
 	GetItemById(c context.Context, id int) (domains.Task, error)
 	InsertItem(c context.Context, item domains.Task) (domains.Task, error)
 	UpdateItem(c context.Context, item domains.Task) (domains.Task, error)
+	DeleteItem(c context.Context, id int) error
 }

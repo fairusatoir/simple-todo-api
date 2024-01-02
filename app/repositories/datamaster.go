@@ -84,3 +84,22 @@ func (r *repositories) Update(c context.Context, tx *sql.Tx, item domains.Task) 
 
 	return item, nil
 }
+
+func (r *repositories) Delete(c context.Context, tx *sql.Tx, id int) error {
+	q := "DELETE FROM task WHERE id = ?"
+	result, err := tx.ExecContext(c, q, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		panic(utilities.NewNotFoundError(id))
+	}
+
+	return nil
+}

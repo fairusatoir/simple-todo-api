@@ -89,3 +89,18 @@ func (u *usecase) UpdateItem(c context.Context, item domains.Task) (domains.Task
 
 	return NewItem, nil
 }
+
+func (u *usecase) DeleteItem(c context.Context, id int) error {
+	tx, err := u.MasterdataClient.Begin()
+	if err != nil {
+		return err
+	}
+	defer utilities.CommitOrRollback(tx)
+
+	err = u.Repo.Delete(c, tx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
