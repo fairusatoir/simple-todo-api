@@ -61,9 +61,19 @@ DELETE http://localhost:8080/api/tasks/99999
 Accept: application/json
 
 ### COMPLATED TASKS BY ID
-GET http://localhost:8080/api/tasks/2/complated
+PUT http://localhost:8080/api/tasks/2/status
 Accept: application/json
+Content-Type: application/json
 
-### COMPLATED TASKS BY ID NOT FOUND
-GET http://localhost:8080/api/tasks/99999/complated
+{
+  "is_completed": true
+}
+
+### COMPLATED TASKS BY ID ERROR
+PUT http://localhost:8080/api/tasks/2/status
 Accept: application/json
+Content-Type: application/json
+
+{
+  "completed": true
+}

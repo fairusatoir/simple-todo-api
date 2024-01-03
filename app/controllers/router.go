@@ -38,7 +38,7 @@ func Handler() *httprouter.Router {
 	r.POST("/api/tasks", handler.CreateItem)
 	r.PUT("/api/tasks/:id", handler.UpdateItem)
 	r.DELETE("/api/tasks/:id", handler.DeleteItem)
-	r.GET("/api/tasks/:id/complated", handler.ComplatedItem)
+	r.PUT("/api/tasks/:id/status", handler.ComplatedItem)
 
 	r.PanicHandler = utilities.ErrorHandler
 	return r
@@ -101,7 +101,12 @@ func (r *router) ComplatedItem(w http.ResponseWriter, re *http.Request, p httpro
 	id, err := strconv.Atoi(p.ByName("id"))
 	utilities.PanicOnError(err)
 
-	item, err := r.Usecase.UpdateCompletedItem(re.Context(), id)
+	reqItem := domains.UpdateStatusTask{}
+	utilities.ReadRequest(re, &reqItem)
+
+	reqItem.Id = id
+
+	item, err := r.Usecase.UpdateCompletedItem(re.Context(), reqItem)
 	utilities.PanicOnError(err)
 
 	utilities.GenerateResponse(w, http.StatusOK, item, nil)

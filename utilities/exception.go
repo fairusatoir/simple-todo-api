@@ -18,7 +18,7 @@ func ErrorHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
 	// fmt.Printf("[%s][%s]\n", "ERROR", err)
 
 	if ex, ok := err.(validator.ValidationErrors); ok {
-		badRequestError(w, r, ex.Error())
+		badRequestError(w, r, ex)
 		return
 	}
 
@@ -27,7 +27,10 @@ func ErrorHandler(w http.ResponseWriter, r *http.Request, err interface{}) {
 		return
 	}
 
-	internalServerError(w, r, err)
+	if ex, ok := err.(error); ok {
+		internalServerError(w, r, ex.Error())
+		return
+	}
 }
 
 func internalServerError(w http.ResponseWriter, r *http.Request, err interface{}) {
@@ -36,10 +39,10 @@ func internalServerError(w http.ResponseWriter, r *http.Request, err interface{}
 	GenerateResponse(w, status, nil, err)
 }
 
-func badRequestError(w http.ResponseWriter, r *http.Request, err interface{}) {
+func badRequestError(w http.ResponseWriter, r *http.Request, err validator.ValidationErrors) {
 	status := http.StatusBadRequest
 	w.WriteHeader(status)
-	GenerateResponse(w, status, nil, err)
+	GenerateResponse(w, status, nil, err.Error())
 }
 
 func notFoundError(w http.ResponseWriter, r *http.Request, err interface{}) {
