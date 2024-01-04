@@ -7,7 +7,14 @@ import (
 	"simple-to-do/utilities"
 )
 
-func (r *repositories) All(c context.Context, tx *sql.Tx) ([]domains.Task, error) {
+type Datamaster struct {
+}
+
+func NewDatamaster() Repositories {
+	return &Datamaster{}
+}
+
+func (r *Datamaster) All(c context.Context, tx *sql.Tx) ([]domains.Task, error) {
 	q := "SELECT id, title, description, due_date, is_completed FROM task"
 	rows, err := tx.QueryContext(c, q)
 	if err != nil {
@@ -33,7 +40,7 @@ func (r *repositories) All(c context.Context, tx *sql.Tx) ([]domains.Task, error
 	return items, nil
 }
 
-func (r *repositories) Find(c context.Context, tx *sql.Tx, id int) (domains.Task, error) {
+func (r *Datamaster) Find(c context.Context, tx *sql.Tx, id int) (domains.Task, error) {
 	q := "SELECT id, title, description, due_date, is_completed FROM task WHERE id = ?"
 	row := tx.QueryRowContext(c, q, id)
 
@@ -49,7 +56,7 @@ func (r *repositories) Find(c context.Context, tx *sql.Tx, id int) (domains.Task
 	return task, nil
 }
 
-func (r *repositories) Save(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error) {
+func (r *Datamaster) Save(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error) {
 	q := "INSERT INTO task(title, description, due_date) VALUES (?,?,?)"
 	result, e := tx.ExecContext(c, q, item.Title, item.Description, item.DueDate)
 	if e != nil {
@@ -66,7 +73,7 @@ func (r *repositories) Save(c context.Context, tx *sql.Tx, item domains.Task) (d
 	return item, nil
 }
 
-func (r *repositories) Update(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error) {
+func (r *Datamaster) Update(c context.Context, tx *sql.Tx, item domains.Task) (domains.Task, error) {
 	q := "UPDATE task SET title = ?, description = ?, due_date = ?, is_completed = ? WHERE id = ?"
 	result, err := tx.ExecContext(c, q, item.Title, item.Description, item.DueDate, item.IsCompleted, item.Id)
 	if err != nil {
@@ -85,7 +92,7 @@ func (r *repositories) Update(c context.Context, tx *sql.Tx, item domains.Task) 
 	return item, nil
 }
 
-func (r *repositories) Delete(c context.Context, tx *sql.Tx, id int) error {
+func (r *Datamaster) Delete(c context.Context, tx *sql.Tx, id int) error {
 	q := "DELETE FROM task WHERE id = ?"
 	result, err := tx.ExecContext(c, q, id)
 	if err != nil {

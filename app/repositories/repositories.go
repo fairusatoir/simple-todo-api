@@ -6,13 +6,6 @@ import (
 	"simple-to-do/app/domains"
 )
 
-type repositories struct {
-}
-
-func NewRepositories() *repositories {
-	return &repositories{}
-}
-
 type Repositories interface {
 	All(c context.Context, tx *sql.Tx) ([]domains.Task, error)
 	Find(c context.Context, tx *sql.Tx, id int) (domains.Task, error)

@@ -7,9 +7,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+var isPrintError bool = false
+
 func PanicOnError(err error) {
 	if err != nil {
-		fmt.Printf("[%s][%s]\n", "ERROR", err)
+		if isPrintError {
+			fmt.Printf("[%s][%s]\n", "ERROR", err)
+		}
 		panic(err)
 	}
 }
@@ -56,6 +60,8 @@ type NotFoundError struct {
 }
 
 func NewNotFoundError(data interface{}) NotFoundError {
-	fmt.Printf("[%s][%v]\n", "NOT FOUND", data)
+	if isPrintError {
+		fmt.Printf("[%s][%v]\n", "NOT FOUND", data)
+	}
 	return NotFoundError{Error: http.StatusText(http.StatusNotFound)}
 }

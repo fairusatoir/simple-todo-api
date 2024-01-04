@@ -30,6 +30,7 @@ func httpRes(httpstatus int, res interface{}, err interface{}) WebResponse {
 
 func GenerateResponse(w http.ResponseWriter, httpstatus int, data interface{}, err interface{}) {
 	w.Header().Add("Content-Type", "application/json")
+	w.WriteHeader(httpstatus)
 	encoder := json.NewEncoder(w)
 	e := encoder.Encode(httpRes(httpstatus, data, err))
 	PanicOnError(e)

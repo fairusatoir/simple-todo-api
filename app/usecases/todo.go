@@ -2,12 +2,30 @@ package usecases
 
 import (
 	"context"
+	"database/sql"
 	"simple-to-do/app/domains"
+	"simple-to-do/app/repositories"
 	"simple-to-do/utilities"
+
+	"github.com/go-playground/validator/v10"
 )
 
-func (u *usecase) GetItems(c context.Context) ([]domains.Task, error) {
-	tx, err := u.MasterdataClient.Begin()
+type Todo struct {
+	Repo       repositories.Repositories
+	Datasource *sql.DB
+	Validate   *validator.Validate
+}
+
+func NewTodoUsecase(r repositories.Repositories, db *sql.DB, v *validator.Validate) Usecase {
+	return &Todo{
+		Repo:       r,
+		Datasource: db,
+		Validate:   v,
+	}
+}
+
+func (u *Todo) GetItems(c context.Context) ([]domains.Task, error) {
+	tx, err := u.Datasource.Begin()
 	if err != nil {
 		return nil, err
 	}
@@ -21,8 +39,8 @@ func (u *usecase) GetItems(c context.Context) ([]domains.Task, error) {
 	return tasks, nil
 }
 
-func (u *usecase) GetItemById(c context.Context, id int) (domains.Task, error) {
-	tx, err := u.MasterdataClient.Begin()
+func (u *Todo) GetItemById(c context.Context, id int) (domains.Task, error) {
+	tx, err := u.Datasource.Begin()
 	if err != nil {
 		return domains.Task{}, err
 	}
@@ -40,13 +58,13 @@ func (u *usecase) GetItemById(c context.Context, id int) (domains.Task, error) {
 	return task, nil
 }
 
-func (u *usecase) InsertItem(c context.Context, item domains.Task) (domains.Task, error) {
+func (u *Todo) InsertItem(c context.Context, item domains.Task) (domains.Task, error) {
 	err := u.Validate.Struct(item)
 	if err != nil {
 		return domains.Task{}, err
 	}
 
-	tx, err := u.MasterdataClient.Begin()
+	tx, err := u.Datasource.Begin()
 	if err != nil {
 		return domains.Task{}, err
 	}
@@ -61,13 +79,13 @@ func (u *usecase) InsertItem(c context.Context, item domains.Task) (domains.Task
 	return NewItem, nil
 }
 
-func (u *usecase) UpdateItem(c context.Context, item domains.Task) (domains.Task, error) {
+func (u *Todo) UpdateItem(c context.Context, item domains.Task) (domains.Task, error) {
 	err := u.Validate.Struct(item)
 	if err != nil {
 		return domains.Task{}, err
 	}
 
-	tx, err := u.MasterdataClient.Begin()
+	tx, err := u.Datasource.Begin()
 	if err != nil {
 		return domains.Task{}, err
 	}
@@ -90,8 +108,8 @@ func (u *usecase) UpdateItem(c context.Context, item domains.Task) (domains.Task
 	return NewItem, nil
 }
 
-func (u *usecase) DeleteItem(c context.Context, id int) error {
-	tx, err := u.MasterdataClient.Begin()
+func (u *Todo) DeleteItem(c context.Context, id int) error {
+	tx, err := u.Datasource.Begin()
 	if err != nil {
 		return err
 	}
@@ -105,13 +123,13 @@ func (u *usecase) DeleteItem(c context.Context, id int) error {
 	return nil
 }
 
-func (u *usecase) UpdateCompletedItem(c context.Context, item domains.UpdateStatusTask) (domains.Task, error) {
+func (u *Todo) UpdateCompletedItem(c context.Context, item domains.UpdateStatusTask) (domains.Task, error) {
 	err := u.Validate.Struct(item)
 	if err != nil {
 		return domains.Task{}, err
 	}
 
-	tx, err := u.MasterdataClient.Begin()
+	tx, err := u.Datasource.Begin()
 	if err != nil {
 		return domains.Task{}, err
 	}
