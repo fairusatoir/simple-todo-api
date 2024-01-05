@@ -28,21 +28,21 @@ Before you start, make sure you have the following installed on your machine:
 
 1. Clone this repository to your local machine:
 
-    ```bash
-    git clone https://github.com/your-username/todo-api.git
-    ```
+   ```bash
+   git clone https://github.com/your-username/todo-api.git
+   ```
 
 2. Change into the project directory:
 
-    ```bash
-    cd todo-api
-    ```
+   ```bash
+   cd todo-api
+   ```
 
 3. Build and run the Golang application:
 
-    ```bash
-    go run main.go
-    ```
+   ```bash
+   go run main.go
+   ```
 
    This will start the Todo API server at `http://localhost:8080`.
 
@@ -53,6 +53,7 @@ Before you start, make sure you have the following installed on your machine:
 - **POST /api/tasks**: Create a new task
 - **PUT /api/tasks/{id}**: Update a task by ID
 - **DELETE /api/tasks/{id}**: Delete a task by ID
+- **PUT /api/tasks/{id}/status**: Complated a task by ID
 
 ### Example Usage
 
@@ -62,30 +63,42 @@ Before you start, make sure you have the following installed on your machine:
 curl http://localhost:8080/api/tasks
 ```
 
+#### Get a task
+
+```bash
+curl http://localhost:8080/api/tasks/{id}
+```
+
 #### Create a new task
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"title":"Read a book","completed":false}' http://localhost:8080/api/tasks
+curl -X POST -H "Content-Type: application/json" -d '{{"title": "Self development","description": "Reading 10 pages of a programming book","due_date": "2024-01-10T00:00:00Z"}}' http://localhost:8080/api/tasks
 ```
 
 #### Update a task
 
 ```bash
-curl -X PUT -H "Content-Type: application/json" -d '{"title":"Read a book","completed":true}' http://localhost:8080/api/tasks/{id}
+curl -X PUT -H "Content-Type: application/json" -d '{{"title": "Self development","description": "Reading 10 pages of a programming book","due_date": "2024-01-10T00:00:00Z"}}' http://localhost:8080/api/tasks/{id}
 ```
 
-#### Delete a task
+#### Complated a task
 
 ```bash
 curl -X DELETE http://localhost:8080/api/tasks/{id}
+```
+
+#### Update a task
+
+```bash
+curl -X PUT -H "Content-Type: application/json" -d '{"is_completed": true}' http://localhost:8080/api/tasks/{id}/status
 ```
 
 ### Cleanup
 
 1. To stop and remove the MySQL container, run:
 
-    ```bash
-    docker-compose -f docker/datamaster.yml down
-    ```
+   ```bash
+   docker-compose -f docker/datamaster.yml down
+   ```
 
 This is a basic setup for a Todo API with Golang and MySQL using Docker Compose. Feel free to customize and extend the project based on your requirements.
