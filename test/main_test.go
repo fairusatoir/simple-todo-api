@@ -32,7 +32,7 @@ func setupApp() http.Handler {
 	repo := repositories.NewDatamaster()
 	usecase := usecases.NewTodoUsecase(repo, d, v)
 	router := api.NewApi(usecase)
-	handler := config.Router(router)
+	handler := config.InitRouter(router)
 	return handler
 }
 
@@ -40,7 +40,7 @@ func setupTruncate(db *sql.DB) {
 	db.Exec("TRUNCATE task")
 }
 
-func TestGetAllItemsNull(t *testing.T) {
+func TestTaskGetAllNull(t *testing.T) {
 	setupTruncate(setupDatasource())
 	router := setupApp()
 
@@ -63,7 +63,7 @@ func TestGetAllItemsNull(t *testing.T) {
 	assert.Nil(t, resBody["data"])
 }
 
-func TestGetAllItems(t *testing.T) {
+func TestTaskGetAll(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -96,7 +96,7 @@ func TestGetAllItems(t *testing.T) {
 	assert.NotNil(t, resBody["data"])
 }
 
-func TestGetItemSuccess(t *testing.T) {
+func TestTaskGetSuccess(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -131,7 +131,7 @@ func TestGetItemSuccess(t *testing.T) {
 	assert.Equal(t, item.Title, resBody["data"].(map[string]interface{})["title"])
 }
 
-func TestGetItemFailed(t *testing.T) {
+func TestTaskGetFailed(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -164,7 +164,7 @@ func TestGetItemFailed(t *testing.T) {
 	assert.Nil(t, resBody["data"])
 }
 
-func TestCreateItemSuccess(t *testing.T) {
+func TestTaskCreateSuccess(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -195,7 +195,7 @@ func TestCreateItemSuccess(t *testing.T) {
 	assert.Equal(t, task.Title, resBody["data"].(map[string]interface{})["title"])
 }
 
-func TestCreateItemFailed(t *testing.T) {
+func TestTaskCreateFailed(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -225,7 +225,7 @@ func TestCreateItemFailed(t *testing.T) {
 	assert.Nil(t, resBody["data"])
 }
 
-func TestUpdateItemSuccess(t *testing.T) {
+func TestTaskUpdateSuccess(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -265,7 +265,7 @@ func TestUpdateItemSuccess(t *testing.T) {
 	assert.Equal(t, task.Title, resBody["data"].(map[string]interface{})["title"])
 }
 
-func TestUpdateItemFailed(t *testing.T) {
+func TestTaskUpdateFailed(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -303,7 +303,7 @@ func TestUpdateItemFailed(t *testing.T) {
 	assert.NotNil(t, resBody["error"])
 	assert.Nil(t, resBody["data"])
 }
-func TestDeleteItemSuccess(t *testing.T) {
+func TestTaskDeleteSuccess(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()
@@ -336,7 +336,7 @@ func TestDeleteItemSuccess(t *testing.T) {
 	assert.Nil(t, resBody["data"])
 }
 
-func TestDeleteItemFailed(t *testing.T) {
+func TestTaskDeleteFailed(t *testing.T) {
 	d := setupDatasource()
 	setupTruncate(d)
 	router := setupApp()

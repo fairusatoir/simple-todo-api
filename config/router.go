@@ -1,13 +1,14 @@
 package config
 
 import (
+	"net/http"
 	"simple-to-do/app/api"
 	"simple-to-do/utilities"
 
 	"github.com/julienschmidt/httprouter"
 )
 
-func Router(a api.Rest) *httprouter.Router {
+func InitRouter(a api.Rest) *httprouter.Router {
 	router := httprouter.New()
 
 	router.GET("/api/tasks", a.FindAllItems)
@@ -19,4 +20,11 @@ func Router(a api.Rest) *httprouter.Router {
 
 	router.PanicHandler = utilities.ErrorHandler
 	return router
+}
+
+func InitHandler(a api.Rest) *http.Server {
+	return &http.Server{
+		Addr:    "localhost:8080",
+		Handler: InitRouter(a),
+	}
 }
