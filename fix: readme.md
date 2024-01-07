@@ -53,7 +53,7 @@ Before you start, make sure you have the following installed on your machine:
 - **POST /api/tasks**: Create a new task
 - **PUT /api/tasks/{id}**: Update a task by ID
 - **DELETE /api/tasks/{id}**: Delete a task by ID
-- **PUT /api/tasks/{id}/status**: Complated a task by ID
+- **GET /api/tasks/{id}/status?set=true**: Complated a task by ID
 
 ### Example Usage
 
@@ -90,7 +90,7 @@ curl -X DELETE http://localhost:8080/api/tasks/{id}
 #### Update a task
 
 ```bash
-curl -X PUT -H "Content-Type: application/json" -d '{"is_completed": true}' http://localhost:8080/api/tasks/{id}/status
+curl -X GET -H "Content-Type: application/json" http://localhost:8080/api/tasks/{id}/status?set=true
 ```
 
 ### Cleanup
