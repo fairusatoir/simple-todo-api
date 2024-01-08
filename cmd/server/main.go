@@ -21,11 +21,10 @@ func main() {
 	if err != nil {
 		logger.Fatal(err.Error(), logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer})
 	}
-	logger.Info("server loaded", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer})
+	logger.Info("server up", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer})
 
 	err = s.ListenAndServe()
 	if err != nil {
 		logger.Fatal(err.Error(), logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer})
 	}
-	logger.Info("server up", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer})
 }

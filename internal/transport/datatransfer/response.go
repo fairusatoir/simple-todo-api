@@ -8,27 +8,33 @@ import (
 type BaseResponse struct {
 	Code   int         `json:"code"`
 	Status string      `json:"status"`
-	Error  error       `json:"error"`
-	Data   interface{} `json:"data"`
+	Error  *Error      `json:"error,omitempty"`
+	Data   interface{} `json:"data,omitempty"`
 }
 
-func writeBody(hs int, d interface{}, err error) *BaseResponse {
+type Error struct {
+	Message string `json:"message"`
+}
+
+func Response(hs int, d interface{}) *BaseResponse {
 	return &BaseResponse{
 		Code:   hs,
 		Status: http.StatusText(hs),
 		Data:   d,
-		Error:  err,
 	}
 }
 
-func Write(w http.ResponseWriter, hs int, d interface{}, e error) error {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(hs)
-
-	encoder := json.NewEncoder(w)
-	err := encoder.Encode(writeBody(hs, d, e))
-	if err != nil {
-		return err
+func ErrorResponse(hs int, err error) *BaseResponse {
+	return &BaseResponse{
+		Code:   hs,
+		Status: http.StatusText(hs),
+		Error:  &Error{Message: err.Error()},
 	}
-	return nil
+}
+
+func Write(w http.ResponseWriter, resp *BaseResponse) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(resp.Code)
+
+	return json.NewEncoder(w).Encode(resp)
 }
