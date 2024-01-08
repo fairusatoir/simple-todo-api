@@ -1,4 +1,4 @@
-package domains
+package model
 
 import "time"
 
@@ -10,13 +10,14 @@ type Task struct {
 	IsCompleted bool      `json:"is_completed" validate:"required_without=Title"`
 }
 
-type UpdateStatusTask struct {
-	Id          int  `json:"id"`
-	IsCompleted bool `json:"is_completed" validate:"required"`
+func (t *Task) UpdateCompleted(s bool) bool {
+	if t.IsCompleted != s {
+		t.IsCompleted = s
+		return true
+	}
+	return false
 }
 
-func (t *Task) Done() {
-	if !t.IsCompleted {
-		t.IsCompleted = true
-	}
+func (t *Task) SetId(id int) {
+	t.Id = id
 }

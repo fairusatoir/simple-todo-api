@@ -1,0 +1,9 @@
+app:
+  name: "todo.service"
+  version: "1.0.0"
+  environment: "development"
+  debug: "true"
+datasource:
+  datamaster:
+    driver: "mysql"
+    url: "root:password@tcp(localhost:3306)/datamaster?parseTime=true"
