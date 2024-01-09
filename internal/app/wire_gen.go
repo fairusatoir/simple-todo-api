@@ -24,9 +24,9 @@ func InitializeApp() (*http.Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	validate := validator.NewValidator()
-	service := services.InitalizeTodoService(repositoriesRepositories, db, validate)
-	handlerHandler := handler.InitalizedTodoHandler(service)
+	service := services.InitalizeTodoService(repositoriesRepositories, db)
+	validate := pkg_validator.NewValidator()
+	handlerHandler := handler.InitalizedTodoHandler(service, validate)
 	server := routes.InitalizeServer(handlerHandler)
 	return server, nil
 }

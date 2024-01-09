@@ -7,7 +7,7 @@ type Task struct {
 	Title       string    `json:"title" validate:"required"`
 	Description string    `json:"description"`
 	DueDate     time.Time `json:"due_date"`
-	IsCompleted bool      `json:"is_completed" validate:"required_without=Title"`
+	IsCompleted bool      `json:"is_completed"`
 }
 
 func (t *Task) UpdateCompleted(s bool) bool {

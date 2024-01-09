@@ -35,6 +35,10 @@ func AppEnv() string {
 	return viper.GetString("app.environment")
 }
 
+func IsAppProd() bool {
+	return AppEnv() == "production"
+}
+
 func AppDebug() bool {
 	v := viper.GetBool("app.debug")
 	// v: = true

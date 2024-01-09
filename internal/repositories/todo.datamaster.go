@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"simple-to-do/internal/model"
+	"simple-to-do/internal/utils/constants"
 )
 
 type TodoDatamaster struct {
@@ -38,24 +39,31 @@ func (td *TodoDatamaster) All(c context.Context, tx *sql.Tx) ([]model.Task, erro
 }
 
 func (td *TodoDatamaster) Find(c context.Context, tx *sql.Tx, id int) (model.Task, error) {
-	q := "SELECT id, title, description, due_date, is_completed FROM task WHERE id = ?"
-	r := tx.QueryRowContext(c, q, id)
-
 	var t model.Task
-	err := r.Scan(&t.Id, &t.Title, &t.Description, &t.DueDate, &t.IsCompleted)
+
+	q := "SELECT id, title, description, due_date, is_completed FROM task WHERE id = ?"
+	r, err := tx.QueryContext(c, q, id)
 	if err != nil {
 		return t, err
 	}
+	defer r.Close()
 
-	return t, nil
+	if r.Next() {
+		err := r.Scan(&t.Id, &t.Title, &t.Description, &t.DueDate, &t.IsCompleted)
+		if err != nil {
+			return t, err
+		}
+		return t, nil
+	} else {
+		return t, constants.Err404
+	}
 }
 
 func (td *TodoDatamaster) Save(c context.Context, tx *sql.Tx, t model.Task) (model.Task, error) {
-	q := "INSERT INTO task(title, description, due_date) VALUES (?,?,?)"
-	r, err := tx.ExecContext(c, q, t.Title, t.Description, t.DueDate)
-
 	var _t model.Task
 
+	q := "INSERT INTO task(title, description, due_date) VALUES (?,?,?)"
+	r, err := tx.ExecContext(c, q, t.Title, t.Description, t.DueDate)
 	if err != nil {
 		return _t, err
 	}

@@ -38,11 +38,22 @@ Content-Type: application/json
 
 {
   "title": "Programming",
-  "description": "Reading 10 pages of a programming book",
+  "description": "Reading 1 pages of a programming book",
   "due_date": "2024-01-10T00:00:00Z"
 }
 
-### UPDATE TASKS ERROR
+### UPDATE TASKS ERROR NOT FOUND
+PUT http://localhost:8080/api/tasks/999999
+Accept: application/json
+Content-Type: application/json
+
+{
+  "title": "Programming",
+  "description": "Handling Error BUg",
+  "due_date": "2024-01-10T00:00:00Z"
+}
+
+### UPDATE TASKS ERROR VALIDATION
 PUT http://localhost:8080/api/tasks/1
 Accept: application/json
 Content-Type: application/json

@@ -10,7 +10,7 @@ import (
 	"simple-to-do/internal/services"
 	"simple-to-do/internal/transport/handler"
 	"simple-to-do/internal/transport/routes"
-	"simple-to-do/pkg/validator"
+	pkg_validator "simple-to-do/pkg/validator"
 
 	"github.com/google/wire"
 )
@@ -18,7 +18,7 @@ import (
 func InitializeApp() (*http.Server, error) {
 	wire.Build(
 		repositories.InitalizeTodoDatamaster,
-		validator.NewValidator,
+		pkg_validator.NewValidator,
 		client.InitializedDatamaster,
 		services.InitalizeTodoService,
 		handler.InitalizedTodoHandler,
