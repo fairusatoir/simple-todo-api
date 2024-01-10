@@ -1,4 +1,4 @@
-package pkg_validator
+package validator
 
 import (
 	"errors"
@@ -8,10 +8,6 @@ import (
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/exp/slices"
 )
-
-func NewValidator() *validator.Validate {
-	return validator.New()
-}
 
 var mapHelepr = map[string]string{
 	"required":  "is a required field",
@@ -23,9 +19,12 @@ var mapHelepr = map[string]string{
 
 var needParam = []string{"min", "max", "containsany"}
 
-func ValidatePayloads(err error) error {
+func ValidatePayloads(t interface{}) error {
+	validate := validator.New()
+
 	var field, param, value, tag, message string
 
+	err := validate.Struct(t)
 	if err != nil {
 		for _, e := range err.(validator.ValidationErrors) {
 			field = e.Field()

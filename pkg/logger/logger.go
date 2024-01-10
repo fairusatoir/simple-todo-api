@@ -1,4 +1,4 @@
-package pkg_logger
+package logger
 
 import (
 	"os"

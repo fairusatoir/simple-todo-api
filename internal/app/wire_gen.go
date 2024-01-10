@@ -13,7 +13,6 @@ import (
 	"simple-to-do/internal/services"
 	"simple-to-do/internal/transport/handler"
 	"simple-to-do/internal/transport/routes"
-	"simple-to-do/pkg/validator"
 )
 
 // Injectors from wire.go:
@@ -25,8 +24,7 @@ func InitializeApp() (*http.Server, error) {
 		return nil, err
 	}
 	service := services.InitalizeTodoService(repositoriesRepositories, db)
-	validate := pkg_validator.NewValidator()
-	handlerHandler := handler.InitalizedTodoHandler(service, validate)
+	handlerHandler := handler.InitalizedTodoHandler(service)
 	server := routes.InitalizeServer(handlerHandler)
 	return server, nil
 }
