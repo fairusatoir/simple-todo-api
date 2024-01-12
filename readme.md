@@ -102,3 +102,12 @@ curl -X GET -H "Content-Type: application/json" http://localhost:8080/api/tasks/
    ```
 
 This is a basic setup for a Todo API with Golang and MySQL using Docker Compose. Feel free to customize and extend the project based on your requirements.
+
+### Libraries Used
+
+- [validator/v10](https://pkg.go.dev/github.com/go-playground/validator/v10)
+- [go-sql-driver/mysql](https://pkg.go.dev/github.com/go-sql-driver/mysql)
+- [google/wire](https://pkg.go.dev/github.com/google/wire)
+- [julienschmidt/httprouter](https://pkg.go.dev/github.com/julienschmidt/httprouter)
+- [spf13/viper](https://pkg.go.dev/github.com/spf13/viper)
+- [stretchr/testify](https://pkg.go.dev/github.com/stretchr/testify)
