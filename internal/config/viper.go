@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-func InitializeAppConfig() error {
+func Read() error {
 	viper.SetConfigFile("config.yml")
 	viper.AddConfigPath(".")
 	viper.AllowEmptyEnv(true)
